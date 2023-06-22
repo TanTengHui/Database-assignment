@@ -46,37 +46,37 @@ CREATE TABLE Payment_Method (
 );
 
 -- Inserting values into Customer table
-INSERT INTO Customer (Customer_ID, Cus_Phone, Cus_Email, Cus_Region)
-VALUES ('C001', '123456789', 'ALI@example.com', 'Region1'),
-       ('C002', '987654321', 'AKAU@example.com', 'Region2'),
-       ('C003', '456789123', 'MUTHU@example.com', 'Region3'),
-       ('C004', '321654987', 'AYAMGORENG@example.com', 'Region4');
+INSERT INTO Customer (Customer_ID,Cus_Name, Cus_Phone, Cus_Email)
+VALUES ('C001','Ali','123456789', 'ALI@gmail.com'),
+       ('C002','Akau','987654321', 'AKAU@gmail.com', ),
+       ('C003','Muthu','456789123', 'MUTHU@gmail.com', ),
+       ('C004', 'Richard','321654987','AYAMGORENG@gmail.com');
 
 
 INSERT INTO Buses (Bus_ID, Seat_Cap, Bus_Production, Bus_Model)
-VALUES ('B001', 50, '2019-04-06', 'Model1'),
-       ('B002', 40, '2021-06-15', 'Model2'),
-       ('B003', 30, '2013-03-18', 'Model3'),
-       ('B004', 60, '2022-09-20', 'Model4');
+VALUES ('B001', 50, '2019-04-06', 'Shuttle bus'),
+       ('B002', 50, '2021-06-15', 'Shuttle bus'),
+       ('B003', 30, '2013-03-18', 'Tour bus'),
+       ('B004', 60, '2022-09-20', 'Express bus');
 
 
 INSERT INTO Bus_Ticket (Ticket_ID, Bus_ID, Customer_ID, Bus_Price)
-VALUES ('T001', 'B001', 'C001', 10),
-       ('T002', 'B002', 'C002', 15),
-       ('T003', 'B003', 'C003', 12),
-       ('T004', 'B004', 'C004', 20);
+VALUES ('T001', 'B001', 'C001', 5),
+       ('T002', 'B002', 'C002', 5),
+       ('T003', 'B003', 'C003', 15),
+       ('T004', 'B004', 'C004', 25);
 
 
 INSERT INTO Invoice (Invoice_ID, Invoice_Amount)
-VALUES ('INV031', 100),
-       ('INV056', 200),
-       ('INV023', 150),
-       ('INV076', 180);
+VALUES ('INV031', 5),
+       ('INV056', 5),
+       ('INV023', 15),
+       ('INV076', 25);
 
 
 INSERT INTO Payment_Method (Pay_ID, Pay_Method)
 VALUES ('PAY001', 'CREDIT KAD'),
-       ('PAY002', 'CASH'),
+       ('PAY002', 'E-payment'),
        ('PAY003', 'DEBIT CARD'),
        ('PAY004', 'CREDIT KAD');
 
@@ -121,4 +121,3 @@ SELECT *
 FROM Customer
 WHERE Customer_ID IN (SELECT Customer_ID FROM Bus_Ticket WHERE Bus_ID = 'B003');
 
--- helloooooooooooooooooo
