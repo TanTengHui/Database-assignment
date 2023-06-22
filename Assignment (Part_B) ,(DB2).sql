@@ -203,7 +203,7 @@ SELECT * FROM Customer_Reservations;
 
 
 ----- Queries for TRIGGER
-CREATE TRIGGER generate_Customer_ID BEFORE INSERT ON Customer REFERENCING NEW AS N FOR EACH ROW  mode db2sql
+CREATE TRIGGER generate_Cus_ID BEFORE INSERT ON Customer REFERENCING NEW AS N FOR EACH ROW  mode db2sql
 BEGIN DECLARE last_Customer_ID INT; SET last_Customer_ID =(SELECT MAX(Customer_ID) FROM Customer); SET N.Customer_ID = last_Customer_ID + 1; END;
 
 INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Aiman','0111070910','Aiman@gmail.com');
