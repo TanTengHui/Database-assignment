@@ -53,7 +53,7 @@ CREATE TABLE Reservation (
   Reser_ID VARCHAR(20) NOT NULL,
   Customer_ID INT,
   Bus_ID VARCHAR(20),
-  Seat_Num VARCHAR(10),
+  Seat_Num INT,
   Reser_Date_Times DATETIME,
   CONSTRAINT Reser_ID_PK PRIMARY KEY (Reser_ID),
   CONSTRAINT Customer_FK FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
@@ -113,11 +113,11 @@ INSERT INTO Payment_Method VALUES ('PAY002', 'E-payment');
 INSERT INTO Payment_Method VALUES ('PAY003', 'DEBIT CARD');
 INSERT INTO Payment_Method VALUES ('PAY004', 'CREDIT KAD');
 
-----Reser_ID VARCHAR(20) NOT NULL,Customer_ID VARCHAR(20),Bus_ID VARCHAR(20),Seat_Num INTEGER,Reser_Date_Times DATETIME,
-INSERT INTO Reservation VALUES ('R100',1001,'B001','10','2023-09-20 17:30:00');
-INSERT INTO Reservation VALUES ('R101',1002,'B002','20','2023-12-25 09:00:00');
-INSERT INTO Reservation VALUES ('R102',1003,'B003','17','2023-01-15 08:30:00');
-INSERT INTO Reservation VALUES ('R103',1004,'B004','30','2023-07-30 11:30:00');
+----Reser_ID VARCHAR(20) NOT NULL,Customer_ID INT,Bus_ID VARCHAR(20),Seat_Num INTEGER,Reser_Date_Times DATETIME,
+INSERT INTO Reservation VALUES ('R100',1001,'B001',10,'2023-09-20 17:30:00');
+INSERT INTO Reservation VALUES ('R101',1002,'B002',20,'2023-12-25 09:00:00');
+INSERT INTO Reservation VALUES ('R102',1003,'B003',17,'2023-01-15 08:30:00');
+INSERT INTO Reservation VALUES ('R103',1004,'B004',30,'2023-07-30 11:30:00');
 
 ---Route_ID VARCHAR(20) NOT NULL,Bus_ID VARCHAR(20),Reser_ID VARCHAR(20),Start_Point VARCHAR(20),End_Point VARCHAR(20),ETA_Start TIME,ETA_End TIME,
 INSERT INTO Route VALUES ('RB001','B001','R100','Taman Equine','Sri Serdang','17:30:00','17:50:00');
@@ -166,8 +166,19 @@ SELECT Ticket_ID AS BELOW_AVERAGE_TICKET
 FROM Bus_Ticket
 WHERE Bus_Price <= (SELECT AVG(Bus_Price) FROM Bus_Ticket);
 
+-----Queries (aggregate function)
+SELECT 
+  MAX(BT.Bus_Price) AS Max_TicketPrice,
+  MIN(BT.Bus_Price) AS Min_TicketPrice,
+  AVG(BT.Bus_Price) AS Avg_TicketPrice,
+  COUNT(BT.Ticket_ID) AS Total_TicketsSold
+FROM 
+  Bus_Ticket BT
+  JOIN Buses B ON BT.Bus_ID = B.Bus_ID
+  JOIN Customer C ON BT.Customer_ID = C.Customer_ID;
 
--- QUERIES THREE(group by having)
+
+-- QUERIES (group by having)
 SELECT Bus_ID, COUNT(*) AS Total_Buses, AVG(Seat_Cap) AS Average_Seat_Capacity
 FROM Buses
 GROUP BY Bus_ID
@@ -175,7 +186,7 @@ HAVING AVG(Seat_Cap) > (SELECT AVG(Seat_Cap) FROM Buses)
 ORDER BY Total_Buses DESC;
 
 
--- QUERIES FOUR(subqueries)
+-- QUERIES (subqueries)
 SELECT *
 FROM Customer
 WHERE Customer_ID IN (SELECT Customer_ID FROM Bus_Ticket WHERE Bus_ID = 'B003');
@@ -184,7 +195,7 @@ WHERE Customer_ID IN (SELECT Customer_ID FROM Bus_Ticket WHERE Bus_ID = 'B003');
 DROP VIEW CUSTOMER_DETAILS ;
 DROP VIEW Customer_Reservations ;
 
----- QUERIES FIVE(VIEW)
+---- QUERIES (VIEW)
 CREATE VIEW CUSTOMER_DETAILS (Customer_ID, Cus_Name, Bus_Price)
 AS
 SELECT C.Customer_ID, C.Cus_Name, B.Bus_Price
@@ -194,7 +205,7 @@ JOIN Bus_Ticket B ON C.Customer_ID = B.Customer_ID;
 SELECT * FROM CUSTOMER_DETAILS;
 
 
----- QUERIES SIX(OTHER VIEW)
+---- QUERIES (OTHER VIEW)
 CREATE VIEW Customer_Reservations AS
 SELECT C.Customer_ID, C.Cus_Name, R.Reser_ID, R.Reser_Date_Times
 FROM Customer C
