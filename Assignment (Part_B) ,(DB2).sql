@@ -31,15 +31,15 @@ CREATE TABLE Bus_Ticket (
   Ticket_ID VARCHAR(20) NOT NULL,
   Bus_ID VARCHAR(20),
   Customer_ID INT,
-  Bus_Price INTEGER,
+  Bus_Price DECIMAL(5,2),
   CONSTRAINT B_Tic_ID_PK PRIMARY KEY (Ticket_ID),
   CONSTRAINT B_Bus_FK FOREIGN KEY (Bus_ID) REFERENCES Buses(Bus_ID),
   CONSTRAINT B_Cus_ID_FK FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
 );
 
 CREATE TABLE Invoice (
-  Invoice_ID VARCHAR(20) NOT NULL,
-  Invoice_Amount INTEGER,
+  Invoice_ID INT NOT NULL,
+  Invoice_Amount DECIMAL(5,2),
   CONSTRAINT Invoice_Identity_PK PRIMARY KEY (Invoice_ID)
 );
 
@@ -96,16 +96,16 @@ INSERT INTO Buses VALUES ('B003', 30, '2013-03-18', 'Express bus');
 INSERT INTO Buses VALUES ('B004', 60, '2022-09-20', 'Express bus');
 
 
-INSERT INTO Bus_Ticket VALUES ('T001', 'B001', 1001, 5);
-INSERT INTO Bus_Ticket VALUES ('T002', 'B002', 1002, 5);
-INSERT INTO Bus_Ticket VALUES ('T003', 'B003', 1003, 35);
-INSERT INTO Bus_Ticket VALUES ('T004', 'B004', 1004, 40);
+INSERT INTO Bus_Ticket VALUES ('T001', 'B001', 1001, 5.00);
+INSERT INTO Bus_Ticket VALUES ('T002', 'B002', 1002, 5.00);
+INSERT INTO Bus_Ticket VALUES ('T003', 'B003', 1003, 35.00);
+INSERT INTO Bus_Ticket VALUES ('T004', 'B004', 1004, 40.00);
 
 
-INSERT INTO Invoice VALUES ('INV031', 5);
-INSERT INTO Invoice VALUES ('INV056', 5);
-INSERT INTO Invoice VALUES ('INV023', 15);
-INSERT INTO Invoice VALUES ('INV076', 25);
+INSERT INTO Invoice VALUES (12001, 5.00);
+INSERT INTO Invoice VALUES (12002, 5.00);
+INSERT INTO Invoice VALUES (12003, 35.00);
+INSERT INTO Invoice VALUES (12004, 40.00);
 
 
 INSERT INTO Payment_Method VALUES ('PAY001', 'CREDIT KAD');
@@ -170,7 +170,7 @@ WHERE Bus_Price <= (SELECT AVG(Bus_Price) FROM Bus_Ticket);
 SELECT 
   MAX(BT.Bus_Price) AS Max_TicketPrice,
   MIN(BT.Bus_Price) AS Min_TicketPrice,
-  AVG(BT.Bus_Price) AS Avg_TicketPrice,
+  CAST(AVG(BT.Bus_Price) AS DECIMAL(5, 2)) AS Avg_TicketPrice,
   COUNT(BT.Ticket_ID) AS Total_TicketsSold
 FROM 
   Bus_Ticket BT
@@ -213,13 +213,31 @@ JOIN Reservation R ON C.Customer_ID = R.Customer_ID;
 
 SELECT * FROM Customer_Reservations;
 
+
+
 ----- Queries for TRIGGER
+DROP TRIGGER generate_Cus_ID;
+
 CREATE TRIGGER generate_Cus_ID BEFORE INSERT ON Customer REFERENCING NEW AS N FOR EACH ROW  mode db2sql
 BEGIN DECLARE last_Customer_ID INT; SET last_Customer_ID =(SELECT MAX(Customer_ID) FROM Customer); SET N.Customer_ID = last_Customer_ID + 1; END;
 
 INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Aiman','0111070910','Aiman@gmail.com');
 SELECT * FROM Customer;
 
+
+------Queries for another TRIGGER
+DROP TRIGGER GenerateInvoice;
+
+CREATE TRIGGER GenerateInvoice
+AFTER INSERT ON Bus_Ticket
+REFERENCING NEW AS N
+FOR EACH ROW mode db2sql
+BEGIN DECLARE last_Invoice_ID INT; SET last_Invoice_ID =(SELECT MAX(Invoice_ID) FROM Invoice);  INSERT INTO Invoice (Invoice_ID,Invoice_Amount) VALUES (last_Invoice_ID + 1,N.Bus_Price); END;
+
+INSERT INTO Bus_Ticket VALUES ('T005', 'B004', 1004, 50.00);
+INSERT INTO Bus_Ticket VALUES ('T006', 'B004', 1004, 55.00);
+
+SELECT * FROM Invoice;
 CONNECT RESET
 TERMINATE
 
