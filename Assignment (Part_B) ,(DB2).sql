@@ -19,7 +19,7 @@ CREATE TABLE Buses (
 );
 
 CREATE TABLE Customer (
-  Customer_ID VARCHAR(20) NOT NULL,
+  Customer_ID INT NOT NULL,
   Cus_Name VARCHAR(20),
   Cus_Phone VARCHAR(20),
   Cus_Email VARCHAR(30),
@@ -30,7 +30,7 @@ CREATE TABLE Customer (
 CREATE TABLE Bus_Ticket (
   Ticket_ID VARCHAR(20) NOT NULL,
   Bus_ID VARCHAR(20),
-  Customer_ID VARCHAR(20),
+  Customer_ID INT,
   Bus_Price INTEGER,
   CONSTRAINT B_Tic_ID_PK PRIMARY KEY (Ticket_ID),
   CONSTRAINT B_Bus_FK FOREIGN KEY (Bus_ID) REFERENCES Buses(Bus_ID),
@@ -51,7 +51,7 @@ CREATE TABLE Payment_Method (
 
 CREATE TABLE Reservation (
   Reser_ID VARCHAR(20) NOT NULL,
-  Customer_ID VARCHAR(20),
+  Customer_ID INT,
   Bus_ID VARCHAR(20),
   Seat_Num VARCHAR(10),
   Reser_Date_Times DATETIME,
@@ -84,10 +84,10 @@ CREATE TABLE Bus_Operator (
 );
 
 -- Inserting values into Customer table
-INSERT INTO Customer VALUES ('C001','Ali','0123456789', 'ALI@gmail.com');
-INSERT INTO Customer VALUES ('C002','Akau','0187654321', 'AKAU@gmail.com');
-INSERT INTO Customer VALUES ('C003','Muthu','0156789123', 'MUTHU@gmail.com');
-INSERT INTO Customer VALUES ('C004', 'Richard','0121654987','AYAMGORENG@gmail.com');
+INSERT INTO Customer VALUES (1001,'Ali','0123456789', 'ALI@gmail.com');
+INSERT INTO Customer VALUES (1002,'Akau','0187654321', 'AKAU@gmail.com');
+INSERT INTO Customer VALUES (1003,'Muthu','0156789123', 'MUTHU@gmail.com');
+INSERT INTO Customer VALUES (1004, 'Richard','0121654987','AYAMGORENG@gmail.com');
 
 
 INSERT INTO Buses VALUES ('B001', 50, '2019-04-06', 'Shuttle bus');
@@ -96,10 +96,10 @@ INSERT INTO Buses VALUES ('B003', 30, '2013-03-18', 'Express bus');
 INSERT INTO Buses VALUES ('B004', 60, '2022-09-20', 'Express bus');
 
 
-INSERT INTO Bus_Ticket VALUES ('T001', 'B001', 'C001', 5);
-INSERT INTO Bus_Ticket VALUES ('T002', 'B002', 'C002', 5);
-INSERT INTO Bus_Ticket VALUES ('T003', 'B003', 'C003', 35);
-INSERT INTO Bus_Ticket VALUES ('T004', 'B004', 'C004', 40);
+INSERT INTO Bus_Ticket VALUES ('T001', 'B001', 1001, 5);
+INSERT INTO Bus_Ticket VALUES ('T002', 'B002', 1002, 5);
+INSERT INTO Bus_Ticket VALUES ('T003', 'B003', 1003, 35);
+INSERT INTO Bus_Ticket VALUES ('T004', 'B004', 1004, 40);
 
 
 INSERT INTO Invoice VALUES ('INV031', 5);
@@ -114,10 +114,10 @@ INSERT INTO Payment_Method VALUES ('PAY003', 'DEBIT CARD');
 INSERT INTO Payment_Method VALUES ('PAY004', 'CREDIT KAD');
 
 ----Reser_ID VARCHAR(20) NOT NULL,Customer_ID VARCHAR(20),Bus_ID VARCHAR(20),Seat_Num INTEGER,Reser_Date_Times DATETIME,
-INSERT INTO Reservation VALUES ('R100','C001','B001','10','2023-09-20 17:30:00');
-INSERT INTO Reservation VALUES ('R101','C002','B002','20','2023-12-25 09:00:00');
-INSERT INTO Reservation VALUES ('R102','C003','B003','17','2023-01-15 08:30:00');
-INSERT INTO Reservation VALUES ('R103','C004','B004','30','2023-07-30 11:30:00');
+INSERT INTO Reservation VALUES ('R100',1001,'B001','10','2023-09-20 17:30:00');
+INSERT INTO Reservation VALUES ('R101',1002,'B002','20','2023-12-25 09:00:00');
+INSERT INTO Reservation VALUES ('R102',1003,'B003','17','2023-01-15 08:30:00');
+INSERT INTO Reservation VALUES ('R103',1004,'B004','30','2023-07-30 11:30:00');
 
 ---Route_ID VARCHAR(20) NOT NULL,Bus_ID VARCHAR(20),Reser_ID VARCHAR(20),Start_Point VARCHAR(20),End_Point VARCHAR(20),ETA_Start TIME,ETA_End TIME,
 INSERT INTO Route VALUES ('RB001','B001','R100','Taman Equine','Sri Serdang','17:30:00','17:50:00');
@@ -180,8 +180,6 @@ SELECT *
 FROM Customer
 WHERE Customer_ID IN (SELECT Customer_ID FROM Bus_Ticket WHERE Bus_ID = 'B003');
 
-DROP VIEW CUSTOMER_DETAILS ;
-DROP VIEW Customer_Reservations ;
 
 ---- QUERIES FIVE(VIEW)
 CREATE VIEW CUSTOMER_DETAILS (Customer_ID, Cus_Name, Bus_Price)
@@ -201,10 +199,14 @@ JOIN Reservation R ON C.Customer_ID = R.Customer_ID;
 
 SELECT * FROM Customer_Reservations;
 
-
 ----- Queries for TRIGGER
 CREATE TRIGGER generate_Cus_ID BEFORE INSERT ON Customer REFERENCING NEW AS N FOR EACH ROW  mode db2sql
 BEGIN DECLARE last_Customer_ID INT; SET last_Customer_ID =(SELECT MAX(Customer_ID) FROM Customer); SET N.Customer_ID = last_Customer_ID + 1; END;
 
 INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Aiman','0111070910','Aiman@gmail.com');
 SELECT * FROM Customer;
+
+CONNECT RESET
+TERMINATE
+
+
