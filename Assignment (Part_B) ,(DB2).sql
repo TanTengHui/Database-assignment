@@ -181,6 +181,9 @@ FROM Customer
 WHERE Customer_ID IN (SELECT Customer_ID FROM Bus_Ticket WHERE Bus_ID = 'B003');
 
 
+DROP VIEW CUSTOMER_DETAILS ;
+DROP VIEW Customer_Reservations ;
+
 ---- QUERIES FIVE(VIEW)
 CREATE VIEW CUSTOMER_DETAILS (Customer_ID, Cus_Name, Bus_Price)
 AS
