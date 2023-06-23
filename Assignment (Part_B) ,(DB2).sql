@@ -247,6 +247,27 @@ INSERT INTO Bus_Ticket VALUES ('T005', 'B004', 4, 50.00);
 INSERT INTO Bus_Ticket VALUES ('T006', 'B004', 4, 55.00);
 
 SELECT * FROM Invoice;
+
+
+
+------Extra QUERIES 2
+SELECT
+  C.Customer_ID,
+  C.Cus_Name,
+  R.Reser_ID,
+  RT.Start_Point,
+  RT.End_Point
+FROM
+  Customer C
+  JOIN Reservation R ON C.Customer_ID = R.Customer_ID
+  JOIN Route RT ON R.Reser_ID = RT.Reser_ID
+WHERE
+  C.Cus_Name LIKE 'A%'
+  OR RT.Start_Point = 'Taman Equine'
+ORDER BY
+  C.Customer_ID DESC
+LIMIT 5;
+
 CONNECT RESET
 TERMINATE
 
