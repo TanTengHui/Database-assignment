@@ -167,16 +167,17 @@ SELECT Ticket_ID AS BELOW_AVERAGE_TICKET
 FROM Bus_Ticket
 WHERE Bus_Price <= (SELECT AVG(Bus_Price) FROM Bus_Ticket);
 
------Queries (aggregate function)
-SELECT 
-  MAX(BT.Bus_Price) AS Max_TicketPrice,
-  MIN(BT.Bus_Price) AS Min_TicketPrice,
-  CAST(AVG(BT.Bus_Price) AS DECIMAL(5, 2)) AS Avg_TicketPrice,
-  COUNT(BT.Ticket_ID) AS Total_TicketsSold
-FROM 
-  Bus_Ticket BT
-  JOIN Buses B ON BT.Bus_ID = B.Bus_ID
-  JOIN Customer C ON BT.Customer_ID = C.Customer_ID;
+----Queries three(aggregate function)
+SELECT
+  C.Customer_ID,
+  C.Cus_Name,
+  SUM(BT.Bus_Price) AS TotalAmountSpent
+FROM
+  Customer C
+  JOIN Bus_Ticket BT ON C.Customer_ID = BT.Customer_ID
+GROUP BY
+  C.Customer_ID, C.Cus_Name;
+
 
 
 -- QUERIES (group by having)
@@ -268,6 +269,18 @@ ORDER BY
   C.Customer_ID DESC
 LIMIT 5;
 
+
+-----Queries (aggregate function)
+SELECT 
+  MAX(BT.Bus_Price) AS Max_TicketPrice,
+  MIN(BT.Bus_Price) AS Min_TicketPrice,
+  CAST(AVG(BT.Bus_Price) AS DECIMAL(10, 2)) AS Avg_TicketPrice,
+  COUNT(BT.Ticket_ID) AS Total_TicketsSold
+FROM 
+  Bus_Ticket BT
+  JOIN Buses B ON BT.Bus_ID = B.Bus_ID
+  JOIN Customer C ON BT.Customer_ID = C.Customer_ID;
+  
 CONNECT RESET
 TERMINATE
 
