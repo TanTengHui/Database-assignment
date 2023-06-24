@@ -199,13 +199,13 @@ SELECT * FROM Route;
 SELECT * FROM Bus_Operator;
 
 
--- QUERIES ONE 
+-- QUERIES ONE (aggregate function)
 SELECT Bus_ID AS OLD_BUS
 FROM Buses
 WHERE Bus_Production < '2019-09-20';
 
 
--- QUERIES TWO
+-- QUERIES TWO(aggregate function)
 SELECT Ticket_ID AS BELOW_AVERAGE_TICKET
 FROM Bus_Ticket
 WHERE Bus_Price <= (SELECT AVG(Bus_Price) FROM Bus_Ticket);
@@ -230,55 +230,7 @@ GROUP BY Bus_ID
 HAVING AVG(Seat_Cap) > (SELECT AVG(Seat_Cap) FROM Buses)
 ORDER BY Total_Buses DESC;
 
-
--- QUERIES (subqueries)
-SELECT *
-FROM Customer
-WHERE Customer_ID IN (SELECT Customer_ID FROM Bus_Ticket WHERE Bus_ID = 'B003');
-
-----Queries (subqueries)
-SELECT Cus_Name FROM Customer
-WHERE Customer_ID IN (SELECT Customer_ID FROM Bus_Ticket WHERE Bus_Price > (SELECT AVG(Bus_Price)FROM Bus_Ticket));
-
-DROP VIEW CUSTOMER_DETAILS ;
-DROP VIEW Customer_Reservations ;
-
----- QUERIES (VIEW)
-CREATE VIEW CUSTOMER_DETAILS (Customer_ID, Cus_Name, Bus_Price)
-AS
-SELECT C.Customer_ID, C.Cus_Name, B.Bus_Price
-FROM Customer C
-JOIN Bus_Ticket B ON C.Customer_ID = B.Customer_ID;
-
-SELECT * FROM CUSTOMER_DETAILS;
-
------Queries Store Procedure
-
-
-CREATE PROCEDURE GetOrder (IN cust_id INT)
-BEGIN 
-	DECLARE c CURSOR WITH RETURN FOR 
-		SELECT * FROM Reservation WHERE Customer_ID = cust_id; 
-	OPEN c;
-END
-
-CALL GetOrder(1);
-
-
----- QUERIES (OTHER VIEW)
-CREATE VIEW Customer_Reservations AS
-SELECT C.Customer_ID, C.Cus_Name, R.Reser_ID, R.Reser_Date_Times
-FROM Customer C
-JOIN Reservation R ON C.Customer_ID = R.Customer_ID;
-
-SELECT * FROM Customer_Reservations;
-
-
-
-
-
-
-------Queries for another TRIGGER
+------Queries for TRIGGER
 DROP TRIGGER GenerateInvoice;
 
 CREATE TRIGGER GenerateInvoice
@@ -292,6 +244,47 @@ INSERT INTO Bus_Ticket VALUES ('T012', 'B004', 4, 55.00);
 
 SELECT * FROM Invoice;
 
+
+
+
+
+-----Queries Store Procedure
+
+
+CREATE PROCEDURE GetOrder (IN cust_id INT)
+BEGIN DECLARE c CURSOR WITH RETURN FOR SELECT * FROM Reservation WHERE Customer_ID = cust_id; OPEN c; END;
+CALL GetOrder(1);
+
+---- QUERIES (VIEW)
+
+DROP VIEW CUSTOMER_DETAILS ;
+
+CREATE VIEW CUSTOMER_DETAILS (Customer_ID, Cus_Name, Bus_Price)
+AS
+SELECT C.Customer_ID, C.Cus_Name, B.Bus_Price
+FROM Customer C
+JOIN Bus_Ticket B ON C.Customer_ID = B.Customer_ID;
+
+SELECT * FROM CUSTOMER_DETAILS;
+
+---- QUERIES (OTHER VIEW)
+DROP VIEW Customer_Reservations ;
+
+CREATE VIEW Customer_Reservations AS
+SELECT C.Customer_ID, C.Cus_Name, R.Reser_ID, R.Reser_Date_Times
+FROM Customer C
+JOIN Reservation R ON C.Customer_ID = R.Customer_ID;
+
+SELECT * FROM Customer_Reservations;
+
+-- QUERIES (subqueries)
+SELECT *
+FROM Customer
+WHERE Customer_ID IN (SELECT Customer_ID FROM Bus_Ticket WHERE Bus_ID = 'B003');
+
+----Queries (subqueries)
+SELECT Cus_Name FROM Customer
+WHERE Customer_ID IN (SELECT Customer_ID FROM Bus_Ticket WHERE Bus_Price > (SELECT AVG(Bus_Price)FROM Bus_Ticket));
 
 
 ------Extra QUERIES 2(LImit)
@@ -313,7 +306,7 @@ ORDER BY
 LIMIT 5;
 
 
------Queries (CAST)
+-----Extra Queries (CAST)
 SELECT 
   MAX(BT.Bus_Price) AS Max_TicketPrice,
   MIN(BT.Bus_Price) AS Min_TicketPrice,
@@ -324,7 +317,7 @@ FROM
   JOIN Buses B ON BT.Bus_ID = B.Bus_ID
   JOIN Customer C ON BT.Customer_ID = C.Customer_ID;
   
------ Queries (FETCH N Rows)
+-----Extra Queries (FETCH N Rows)
 SELECT C.Customer_ID, C.Cus_Name, R.Reser_ID, R.Bus_ID, RT.Start_Point, RT.End_Point
 FROM Customer C
 JOIN Reservation R ON C.Customer_ID = R.Customer_ID
@@ -332,6 +325,8 @@ JOIN Route RT ON R.Reser_ID = RT.Reser_ID
 WHERE RT.Start_Point = 'Taman Equine'
   AND RT.End_Point = 'Sri Serdang'
 FETCH FIRST 10 ROWS ONLY;
+
+
 CONNECT RESET
 TERMINATE
 
