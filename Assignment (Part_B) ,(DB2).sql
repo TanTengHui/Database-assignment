@@ -249,7 +249,7 @@ SELECT * FROM Invoice;
 
 
 -----Queries Store Procedure
-
+DROP PROCEDURE Getorder;
 
 CREATE PROCEDURE GetOrder (IN cust_id INT)
 BEGIN DECLARE c CURSOR WITH RETURN FOR SELECT * FROM Reservation WHERE Customer_ID = cust_id; OPEN c; END;
