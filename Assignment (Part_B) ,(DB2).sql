@@ -46,7 +46,9 @@ CREATE TABLE Invoice (
 CREATE TABLE Payment_Method (
   Pay_ID VARCHAR(20) NOT NULL,
   Pay_Method VARCHAR(20),
-  CONSTRAINT Pay_Identity_PK PRIMARY KEY (Pay_ID)
+  Invoice_ID INT,
+  CONSTRAINT Pay_Identity_PK PRIMARY KEY (Pay_ID),
+  CONSTRAINT Pay_Invoice_FK FOREIGN KEY (Invoice_ID) REFERENCES Invoice(Invoice_ID)
 );
 
 CREATE TABLE Reservation (
@@ -88,49 +90,90 @@ INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Ali','0123456789', 
 INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Akau','0187654321', 'AKAU@gmail.com');
 INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Muthu','0156789123', 'MUTHU@gmail.com');
 INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Richard','0121654987','AYAMGORENG@gmail.com');
-INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('John Smith', '123-456-7890','johnS@egmail.com');
-
+INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('John Smith', '0111029374','johnS@egmail.com');
+INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Ho Teck Fung', '0145689137','manS@egmail.com');
+INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Wong Siew Chian', '0167891034','Wong@egmail.com');
+INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Moo Yong Jie', '0167895789','Moo@egmail.com');
+INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Adam', '0173457894','Adam@egmail.com');
+INSERT INTO Customer (Cus_Name,Cus_Phone,Cus_Email) VALUES ('Ling Jun Yuan', '0133678395','Ling@egmail.com');
 
 INSERT INTO Buses VALUES ('B001', 50, '2019-04-06', 'Shuttle bus');
 INSERT INTO Buses VALUES ('B002', 50, '2021-06-15', 'Shuttle bus');
 INSERT INTO Buses VALUES ('B003', 30, '2013-03-18', 'Express bus');
 INSERT INTO Buses VALUES ('B004', 60, '2022-09-20', 'Express bus');
+INSERT INTO Buses VALUES ('B005', 60, '2022-10-20', 'Express bus');
 
 
 INSERT INTO Bus_Ticket VALUES ('T001', 'B001', 1, 5.00);
 INSERT INTO Bus_Ticket VALUES ('T002', 'B002', 2, 5.00);
 INSERT INTO Bus_Ticket VALUES ('T003', 'B003', 3, 35.00);
 INSERT INTO Bus_Ticket VALUES ('T004', 'B004', 4, 40.00);
+INSERT INTO Bus_Ticket VALUES ('T005', 'B005', 5, 40.00);
+INSERT INTO Bus_Ticket VALUES ('T006', 'B005', 6, 40.00);
+INSERT INTO Bus_Ticket VALUES ('T007', 'B004', 7, 40.00);
+INSERT INTO Bus_Ticket VALUES ('T008', 'B004', 8, 40.00);
+INSERT INTO Bus_Ticket VALUES ('T009', 'B001', 9, 6.00);
+INSERT INTO Bus_Ticket VALUES ('T010', 'B002',10, 8.00);
 
 
 INSERT INTO Invoice VALUES (12001, 5.00);
 INSERT INTO Invoice VALUES (12002, 5.00);
 INSERT INTO Invoice VALUES (12003, 35.00);
 INSERT INTO Invoice VALUES (12004, 40.00);
+INSERT INTO Invoice VALUES (12005, 40.00);
+INSERT INTO Invoice VALUES (12006, 40.00);
+INSERT INTO Invoice VALUES (12007, 40.00);
+INSERT INTO Invoice VALUES (12008, 40.00);
+INSERT INTO Invoice VALUES (12009, 6.00);
+INSERT INTO Invoice VALUES (12010, 8.00);
 
 
-INSERT INTO Payment_Method VALUES ('PAY001', 'CREDIT KAD');
-INSERT INTO Payment_Method VALUES ('PAY002', 'E-payment');
-INSERT INTO Payment_Method VALUES ('PAY003', 'DEBIT CARD');
-INSERT INTO Payment_Method VALUES ('PAY004', 'CREDIT KAD');
+
+INSERT INTO Payment_Method VALUES ('PAY001', 'CREDIT KAD',12001);
+INSERT INTO Payment_Method VALUES ('PAY002', 'E-payment',12002);
+INSERT INTO Payment_Method VALUES ('PAY003', 'DEBIT CARD',12003);
+INSERT INTO Payment_Method VALUES ('PAY004', 'CREDIT KAD',12004);
+INSERT INTO Payment_Method VALUES ('PAY005', 'DEBIT KAD',12005);
+INSERT INTO Payment_Method VALUES ('PAY006', 'CREDIT KAD',12006);
+INSERT INTO Payment_Method VALUES ('PAY007', 'E-payment',12007);
+INSERT INTO Payment_Method VALUES ('PAY008', 'CREDIT KAD',12008);
+INSERT INTO Payment_Method VALUES ('PAY009', 'CREDIT KAD',12009);
+INSERT INTO Payment_Method VALUES ('PAY010', 'CREDIT KAD',12010);
+
+
 
 ----Reser_ID VARCHAR(20) NOT NULL,Customer_ID INT,Bus_ID VARCHAR(20),Seat_Num INTEGER,Reser_Date_Times DATETIME,
 INSERT INTO Reservation VALUES ('R100',1,'B001',10,'2023-09-20 17:30:00');
 INSERT INTO Reservation VALUES ('R101',2,'B002',20,'2023-12-25 09:00:00');
 INSERT INTO Reservation VALUES ('R102',3,'B003',17,'2023-01-15 08:30:00');
 INSERT INTO Reservation VALUES ('R103',4,'B004',30,'2023-07-30 11:30:00');
+INSERT INTO Reservation VALUES ('R104',5,'B005',32,'2023-08-31 12:30:00');
+INSERT INTO Reservation VALUES ('R105',6,'B005',18,'2023-09-30 15:30:00');
+INSERT INTO Reservation VALUES ('R106',7,'B004',19,'2023-05-19 11:00:00');
+INSERT INTO Reservation VALUES ('R107',8,'B004',21,'2023-07-21 14:30:00');
+INSERT INTO Reservation VALUES ('R108',9,'B001' ,3,'2023-04-30 18:00:00');
+INSERT INTO Reservation VALUES ('R109',10,'B002',6,'2023-02-15 12:30:00');
 
 ---Route_ID VARCHAR(20) NOT NULL,Bus_ID VARCHAR(20),Reser_ID VARCHAR(20),Start_Point VARCHAR(20),End_Point VARCHAR(20),ETA_Start TIME,ETA_End TIME,
 INSERT INTO Route VALUES ('RB001','B001','R100','Taman Equine','Sri Serdang','17:30:00','17:50:00');
 INSERT INTO Route VALUES ('RB002','B002','R101','Puchong','Subang Jaya','09:00:00','09:20:00');
 INSERT INTO Route VALUES ('RB003','B003','R102','Melaka','Kuala Lumpur','08:30:00','10:30:00');
 INSERT INTO Route VALUES ('RB004','B004','R103','Penang','Kuala Lumpur','11:30:00','2:50:00');
+INSERT INTO Route VALUES ('RB005','B005','R104','Penang','Kuala Lumpur','12:30:00','15:50:00');
+INSERT INTO Route VALUES ('RB006','B005','R105','Melaka','Kuala Lumpur','15:30:00','17:30:00');
+INSERT INTO Route VALUES ('RB007','B004','R106','Ipoh','Kuala Lumpur','11:00:00','2:30:00');
+INSERT INTO Route VALUES ('RB008','B004','R107','Ipoh','Kuala Lumpur','14:30:00','16:30:00');
+INSERT INTO Route VALUES ('RB009','B001','R108','Taman Equine','Sri Serdang','18:00:00','18:20:00');
+INSERT INTO Route VALUES ('RB010','B002','R109','Taman Equine','Sri Serdang','12:30:00','12:50:00');
+
 
 ---Driver_ID VARCHAR(20) NOT NULL,Route_ID VARCHAR(20),Driver_Name VARCHAR(20),Driver_Age VARCHAR(20),Driver_Phone VARCHAR(20),
 INSERT INTO Bus_Operator VALUES ('D001','RB001','Johnson','21','0134569810');
 INSERT INTO Bus_Operator VALUES ('D002','RB002','Wong Ya Ping','40','0145827891');
 INSERT INTO Bus_Operator VALUES ('D003','RB003','Ho Teck Fung','25','0178912378');
 INSERT INTO Bus_Operator VALUES ('D004','RB004','Yong En Li','30','0191245789');
+
+
 
 
 
@@ -244,14 +287,14 @@ REFERENCING NEW AS N
 FOR EACH ROW mode db2sql
 BEGIN DECLARE last_Invoice_ID INT; SET last_Invoice_ID =(SELECT MAX(Invoice_ID) FROM Invoice);  INSERT INTO Invoice (Invoice_ID,Invoice_Amount) VALUES (last_Invoice_ID + 1,N.Bus_Price); END;
 
-INSERT INTO Bus_Ticket VALUES ('T005', 'B004', 4, 50.00);
-INSERT INTO Bus_Ticket VALUES ('T006', 'B004', 4, 55.00);
+INSERT INTO Bus_Ticket VALUES ('T011', 'B004', 4, 50.00);
+INSERT INTO Bus_Ticket VALUES ('T012', 'B004', 4, 55.00);
 
 SELECT * FROM Invoice;
 
 
 
-------Extra QUERIES 2
+------Extra QUERIES 2(LImit)
 SELECT
   C.Customer_ID,
   C.Cus_Name,
@@ -264,13 +307,13 @@ FROM
   JOIN Route RT ON R.Reser_ID = RT.Reser_ID
 WHERE
   C.Cus_Name LIKE 'A%'
-  OR RT.Start_Point = 'Taman Equine'
+  AND RT.Start_Point = 'Taman Equine'
 ORDER BY
   C.Customer_ID DESC
 LIMIT 5;
 
 
------Queries (aggregate function)
+-----Queries (CAST)
 SELECT 
   MAX(BT.Bus_Price) AS Max_TicketPrice,
   MIN(BT.Bus_Price) AS Min_TicketPrice,
@@ -281,6 +324,14 @@ FROM
   JOIN Buses B ON BT.Bus_ID = B.Bus_ID
   JOIN Customer C ON BT.Customer_ID = C.Customer_ID;
   
+----- Queries (FETCH N Rows)
+SELECT C.Customer_ID, C.Cus_Name, R.Reser_ID, R.Bus_ID, RT.Start_Point, RT.End_Point
+FROM Customer C
+JOIN Reservation R ON C.Customer_ID = R.Customer_ID
+JOIN Route RT ON R.Reser_ID = RT.Reser_ID
+WHERE RT.Start_Point = 'Taman Equine'
+  AND RT.End_Point = 'Sri Serdang'
+FETCH FIRST 10 ROWS ONLY;
 CONNECT RESET
 TERMINATE
 
