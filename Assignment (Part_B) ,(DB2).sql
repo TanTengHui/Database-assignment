@@ -199,18 +199,15 @@ SELECT * FROM Route;
 SELECT * FROM Bus_Operator;
 
 
--- QUERIES ONE (aggregate function)
-SELECT Bus_ID AS OLD_BUS
-FROM Buses
-WHERE Bus_Production < '2019-09-20';
 
 
--- QUERIES TWO(aggregate function)
+
+-- QUERIES One(aggregate function)
 SELECT Ticket_ID AS BELOW_AVERAGE_TICKET
 FROM Bus_Ticket
 WHERE Bus_Price <= (SELECT AVG(Bus_Price) FROM Bus_Ticket);
 
-----Queries three(aggregate function)
+----Queries Two(aggregate function)
 SELECT
   C.Customer_ID,
   C.Cus_Name,
